@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiche Élève — Nutrition Minérale</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --vert:#2E7D32; --vert2:#43A047; --vert-p:#E8F5E9; --vert-l:#F1F8E9;
+  --bleu:#1565C0; --bleu2:#1976D2; --bleu-p:#E3F2FD;
+  --orange:#E65100; --orange-p:#FFF3E0;
+  --rouge:#C62828; --rouge-p:#FFEBEE;
+  --gris:#37474F; --gris2:#78909C; --gris-p:#ECEFF1;
+  --fond:#F5F7FA; --blanc:#fff;
+  --ombre:0 2px 12px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--fond);color:var(--gris);min-height:100vh}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#1B5E20,#2E7D32,#00695C);color:white;padding:28px 20px 20px;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.05)}
+.header-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.badge{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:3px 12px;font-size:11px;font-weight:800;letter-spacing:.8px}
+.header h1{font-size:clamp(18px,4vw,26px);font-weight:800;margin:12px 0 4px;line-height:1.2}
+.header .sub{font-size:13px;opacity:.8}
+.prog-wrap{margin-top:16px}
+.prog-labels{display:flex;justify-content:space-between;font-size:11px;opacity:.75;margin-bottom:5px}
+.prog-bar{height:5px;background:rgba(255,255,255,0.2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:#A5D6A7;border-radius:3px;transition:width .4s ease;width:0%}
+
+/* IDENTITE */
+.identite{background:var(--blanc);margin:16px;border-radius:12px;box-shadow:var(--ombre);padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fl label{display:block;font-size:10px;font-weight:800;color:var(--vert);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.fl input{width:100%;border:none;border-bottom:2px solid var(--vert-p);padding:5px 2px;font-family:'Nunito';font-size:13px;color:var(--gris);background:transparent;outline:none;transition:border-color .2s}
+.fl input:focus{border-bottom-color:var(--vert2)}
+
+/* TABS */
+.tabs{display:flex;overflow-x:auto;background:var(--blanc);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.07);border-bottom:2px solid #E0E0E0}
+.tab{padding:11px 14px;font-size:11.5px;font-weight:800;color:var(--gris2);cursor:pointer;border:none;background:none;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;letter-spacing:.2px}
+.tab:hover{color:var(--vert2)}
+.tab.active{color:var(--vert);border-bottom-color:var(--vert)}
+
+/* SECTIONS */
+.sec{display:none;padding:16px 14px 48px;max-width:860px;margin:0 auto}
+.sec.active{display:block}
+
+/* CARD */
+.card{background:var(--blanc);border-radius:14px;box-shadow:var(--ombre);margin-bottom:18px;overflow:hidden;animation:fadeUp .3s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.ch{padding:13px 16px;display:flex;align-items:center;gap:9px;font-weight:800;font-size:12.5px;letter-spacing:.3px;color:white}
+.ch.v{background:var(--vert)} .ch.b{background:var(--bleu)} .ch.o{background:var(--orange)}
+.ch .n{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.cb{padding:16px}
+
+/* QUESTION BLOCK */
+.qb{margin-bottom:20px}
+.qt{font-weight:700;font-size:13px;color:var(--bleu);margin-bottom:10px;line-height:1.5;padding-left:10px;border-left:3px solid var(--bleu2)}
+.qt .qn{display:inline-block;background:var(--bleu);color:white;border-radius:4px;padding:1px 7px;font-size:10px;margin-right:5px;vertical-align:middle}
+
+/* TEXTE À TROUS */
+.trou-phrase{font-size:13.5px;line-height:2.8;color:var(--gris);background:var(--vert-l);border-radius:10px;padding:14px 16px;border:1.5px solid var(--vert-p)}
+.trou{display:inline-block;position:relative;margin:0 2px}
+.trou select{border:none;border-bottom:2.5px solid var(--bleu);background:var(--bleu-p);color:var(--bleu);font-family:'Nunito';font-weight:800;font-size:13px;padding:2px 6px;border-radius:4px;cursor:pointer;outline:none;transition:all .2s;min-width:120px}
+.trou select:focus{background:#BBDEFB}
+.trou select.ok{border-bottom-color:var(--vert);background:var(--vert-p);color:var(--vert)}
+.trou select.ko{border-bottom-color:var(--rouge);background:var(--rouge-p);color:var(--rouge)}
+
+/* TABLEAU TROUS */
+.tab-trou{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}
+.tab-trou th{background:var(--vert2);color:white;padding:8px 10px;font-size:11.5px;font-weight:800;text-align:left}
+.tab-trou td{border:1px solid #E0E0E0;padding:6px 8px;vertical-align:middle}
+.tab-trou tr:nth-child(even) td{background:#FAFAFA}
+.tab-trou td select{border:1.5px solid #B0BEC5;border-radius:6px;padding:4px 8px;font-family:'Nunito';font-size:12px;color:var(--gris);background:white;cursor:pointer;outline:none;width:100%;transition:all .15s}
+.tab-trou td select:focus{border-color:var(--bleu2)}
+.tab-trou td select.ok{border-color:var(--vert);background:var(--vert-p);color:var(--vert);font-weight:700}
+.tab-trou td select.ko{border-color:var(--rouge);background:var(--rouge-p);color:var(--rouge)}
+.tab-trou td .fixed{font-weight:700;color:var(--gris);padding:4px 0;display:block}
+
+/* DRAG & DROP LÉGENDAGE */
+.legende-wrap{display:flex;flex-direction:column;gap:12px;margin:10px 0}
+.legende-schema{border:1.5px solid #E0E0E0;border-radius:10px;background:white;overflow:hidden;position:relative}
+.legende-schema svg{width:100%;display:block}
+.legende-mots{display:flex;flex-wrap:wrap;gap:8px;padding:10px;background:var(--bleu-p);border-top:1.5px solid #BBDEFB}
+.mot-drag{background:var(--bleu);color:white;padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:800;cursor:grab;user-select:none;transition:all .15s;border:2px solid transparent}
+.mot-drag:hover{transform:scale(1.05);box-shadow:0 3px 10px rgba(21,101,192,.3)}
+.mot-drag.used{background:#B0BEC5;cursor:not-allowed;opacity:.6}
+.mot-drag:active{cursor:grabbing}
+.legende-zone{fill:white;stroke:#90CAF9;stroke-width:1.5;rx:6}
+.legende-zone.ok-zone{stroke:#2E7D32;fill:#E8F5E9}
+.legende-zone.ko-zone{stroke:#C62828;fill:#FFEBEE}
+.legende-text{font-family:'Nunito',sans-serif;font-size:11px;fill:var(--bleu);font-weight:700;pointer-events:none}
+.legende-text.ok-text{fill:var(--vert)}
+.legende-text.ko-text{fill:var(--rouge)}
+.drop-hint{font-size:10px;fill:#90CAF9;font-family:'Nunito'}
+
+/* QCM */
+.qcm-enonce{font-weight:700;font-size:13px;color:var(--gris);margin-bottom:10px;line-height:1.5;background:var(--bleu-p);padding:10px 13px;border-radius:8px;border-left:4px solid var(--bleu)}
+.qcm-opts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.qcm-opt{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border-radius:8px;border:1.5px solid #E0E0E0;cursor:pointer;transition:all .15s;background:white;font-size:12.5px;line-height:1.4}
+.qcm-opt:hover{border-color:var(--bleu2);background:var(--bleu-p)}
+.qcm-opt.sel{border-color:var(--bleu);background:var(--bleu-p)}
+.qcm-opt.ok{border-color:var(--vert);background:var(--vert-p);color:var(--vert);font-weight:700}
+.qcm-opt.ko{border-color:var(--rouge);background:var(--rouge-p);color:var(--rouge)}
+.qcm-opt .lt{width:22px;height:22px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;background:#ECEFF1;color:var(--gris2);transition:all .15s}
+.qcm-opt.sel .lt{background:var(--bleu);color:white}
+.qcm-opt.ok  .lt{background:var(--vert);color:white}
+.qcm-opt.ko  .lt{background:var(--rouge);color:white}
+.warn-qcm{font-size:11px;color:var(--orange);font-weight:700;margin-bottom:10px}
+.fb{margin-top:8px;padding:8px 12px;border-radius:7px;font-size:12px;line-height:1.5;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--vert-p);color:var(--vert);border-left:3px solid var(--vert)}
+.fb.ko{background:var(--rouge-p);color:var(--rouge);border-left:3px solid var(--rouge)}
+
+/* BOUTONS */
+.btn{padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-family:'Nunito';font-weight:800;font-size:12px;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-v{background:var(--vert);color:white} .btn-v:hover{background:#1B5E20}
+.btn-b{background:var(--bleu);color:white} .btn-b:hover{background:#0D47A1}
+.btn-o{background:white;color:var(--gris);border:1.5px solid #E0E0E0} .btn-o:hover{border-color:var(--vert2);color:var(--vert)}
+.btn-sm{padding:6px 13px;font-size:11px}
+.bgrp{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+/* SCORE */
+.score-card{background:linear-gradient(135deg,var(--vert),#1B5E20);color:white;border-radius:14px;padding:20px;text-align:center;margin:16px 0;box-shadow:var(--ombre)}
+.score-big{font-size:50px;font-weight:800;line-height:1}
+.score-details{display:flex;justify-content:center;gap:22px;margin-top:12px;flex-wrap:wrap}
+.sd .val{font-size:20px;font-weight:800} .sd .lab{font-size:10px;opacity:.75}
+
+/* INFO BOX */
+.info-box{background:var(--orange-p);border-radius:10px;padding:12px 14px;margin:10px 0;border-left:4px solid var(--orange);font-size:12.5px;line-height:1.6}
+
+@media(max-width:580px){.qcm-opts{grid-template-columns:1fr}.identite{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-row">
+    <span class="badge">SVT — 1ÈRE SECONDAIRE</span>
+    <span class="badge" id="tbadge">⏱ 00:00</span>
+  </div>
+  <h1>🌿 Chapitre 1 — La Nutrition Minérale</h1>
+  <div class="sub">Fiche élève interactive | Programme officiel tunisien</div>
+  <div class="prog-wrap">
+    <div class="prog-labels"><span>Progression</span><span id="ptxt">0 réponses</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="pfill"></div></div>
+  </div>
+</div>
+
+<!-- IDENTITE -->
+<div class="identite">
+  <div class="fl"><label>Nom et prénom</label><input id="nom" placeholder="Ton nom…"></div>
+  <div class="fl"><label>Classe</label><input id="classe" placeholder="Ex: 1ère S3"></div>
+  <div class="fl"><label>Date</label><input id="ddate" type="date"></div>
+  <div class="fl"><label>Score QCM</label><input id="scoreAff" placeholder="— / 10" readonly style="font-weight:800;color:var(--vert)"></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active"  onclick="goTab('acquis')">📚 Acquis</button>
+  <button class="tab" onclick="goTab('a1')">🌿 Act.1</button>
+  <button class="tab" onclick="goTab('a2')">💧 Act.2</button>
+  <button class="tab" onclick="goTab('a3')">🍃 Act.3</button>
+  <button class="tab" onclick="goTab('a4')">⚗️ Act.4</button>
+  <button class="tab" onclick="goTab('a5')">🔬 Act.5</button>
+  <button class="tab" onclick="goTab('a6')">🌱 Act.6</button>
+  <button class="tab" onclick="goTab('qcm')">🎯 QCM</button>
+</div>
+
+<!-- ═══════════ ACQUIS ═══════════ -->
+<div class="sec active" id="sec-acquis">
+<div class="card">
+  <div class="ch v"><div class="n">📚</div>ACQUIS DU COLLÈGE (p.9)</div>
+  <div class="cb">
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q1</span> Légender le schéma de la plante — glisse chaque étiquette sur la flèche correspondante</div>
+      <div class="legende-wrap">
+        <div class="legende-schema" id="schema-plante">
+          <svg viewBox="0 0 460 400" id="svg-plante">
+            <!-- Sol -->
+            <rect x="0" y="240" width="460" height="160" fill="#EFEBE9" opacity=".6"/>
+            <line x1="0" y1="240" x2="460" y2="240" stroke="#8D6E63" stroke-width="1.5" stroke-dasharray="6,4"/>
+            <text x="8" y="236" font-size="9" fill="#8D6E63" font-family="Nunito,sans-serif" font-weight="700">SOL</text>
+            <text x="8" y="220" font-size="9" fill="#558B2F" font-family="Nunito,sans-serif" font-weight="700">AIR</text>
+            <!-- Tige -->
+            <line x1="180" y1="238" x2="180" y2="100" stroke="#558B2F" stroke-width="6" stroke-linecap="round"/>
+            <!-- Feuilles -->
+            <ellipse cx="138" cy="162" rx="34" ry="15" fill="#66BB6A" opacity=".9" transform="rotate(-25,138,162)"/>
+            <line x1="163" y1="162" x2="138" y2="162" stroke="#2E7D32" stroke-width="1.5"/>
+            <ellipse cx="222" cy="148" rx="34" ry="15" fill="#66BB6A" opacity=".9" transform="rotate(25,222,148)"/>
+            <line x1="197" y1="148" x2="222" y2="148" stroke="#2E7D32" stroke-width="1.5"/>
+            <ellipse cx="133" cy="122" rx="28" ry="13" fill="#81C784" opacity=".9" transform="rotate(-30,133,122)"/>
+            <line x1="162" y1="125" x2="133" y2="122" stroke="#2E7D32" stroke-width="1.5"/>
+            <!-- Fleur -->
+            <g transform="translate(180,75)">
+              <circle cx="0" cy="-22" r="12" fill="#FFCA28"/>
+              <circle cx="0" cy="22" r="12" fill="#FFCA28"/>
+              <circle cx="-22" cy="0" r="12" fill="#FFCA28"/>
+              <circle cx="22" cy="0" r="12" fill="#FFCA28"/>
+              <circle cx="-16" cy="-16" r="10" fill="#FFD54F"/>
+              <circle cx="16" cy="-16" r="10" fill="#FFD54F"/>
+              <circle cx="-16" cy="16" r="10" fill="#FFD54F"/>
+              <circle cx="16" cy="16" r="10" fill="#FFD54F"/>
+              <circle cx="0" cy="0" r="13" fill="#FF8F00"/>
+            </g>
+            <!-- Racine principale -->
+            <line x1="180" y1="240" x2="180" y2="370" stroke="#795548" stroke-width="5" stroke-linecap="round"/>
+            <!-- Racines secondaires -->
+            <line x1="180" y1="268" x2="130" y2="308" stroke="#795548" stroke-width="3" stroke-linecap="round"/>
+            <line x1="180" y1="295" x2="230" y2="330" stroke="#795548" stroke-width="3" stroke-linecap="round"/>
+            <line x1="180" y1="320" x2="135" y2="355" stroke="#795548" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="180" y1="338" x2="220" y2="368" stroke="#795548" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Poils absorbants -->
+            <g stroke="#A5D6A7" stroke-width="2" stroke-linecap="round">
+              <line x1="130" y1="308" x2="114" y2="300"/><line x1="130" y1="308" x2="113" y2="315"/>
+              <line x1="135" y1="355" x2="118" y2="348"/><line x1="135" y1="355" x2="119" y2="362"/>
+              <line x1="220" y1="368" x2="234" y2="361"/><line x1="220" y1="368" x2="235" y2="375"/>
+              <line x1="180" y1="355" x2="165" y2="349"/><line x1="180" y1="355" x2="166" y2="362"/>
+            </g>
+            <!-- Flèches de légende -->
+            <!-- 1: Fleur -->
+            <line x1="180" y1="55" x2="310" y2="30" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="314" cy="29" r="3" fill="#1565C0"/>
+            <rect id="zl0" x="315" y="15" width="130" height="26" rx="5" class="legende-zone" data-ans="Fleur"/>
+            <text id="tl0" x="380" y="32" text-anchor="middle" class="legende-text drop-hint">⬇ déposer ici</text>
+            <!-- 2: Feuille -->
+            <line x1="155" y1="155" x2="310" y2="100" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="314" cy="99" r="3" fill="#1565C0"/>
+            <rect id="zl1" x="315" y="85" width="130" height="26" rx="5" class="legende-zone" data-ans="Feuille"/>
+            <text id="tl1" x="380" y="102" text-anchor="middle" class="legende-text drop-hint">⬇ déposer ici</text>
+            <!-- 3: Tige -->
+            <line x1="180" y1="190" x2="310" y2="168" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="314" cy="167" r="3" fill="#1565C0"/>
+            <rect id="zl2" x="315" y="154" width="130" height="26" rx="5" class="legende-zone" data-ans="Tige"/>
+            <text id="tl2" x="380" y="171" text-anchor="middle" class="legende-text drop-hint">⬇ déposer ici</text>
+            <!-- 4: Racine principale -->
+            <line x1="180" y1="310" x2="310" y2="285" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="314" cy="284" r="3" fill="#1565C0"/>
+            <rect id="zl3" x="315" y="270" width="130" height="26" rx="5" class="legende-zone" data-ans="Racine principale"/>
+            <text id="tl3" x="380" y="287" text-anchor="middle" class="legende-text drop-hint">⬇ déposer ici</text>
+            <!-- 5: Racine secondaire -->
+            <line x1="148" y1="290" x2="60" y2="290" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="56" cy="290" r="3" fill="#1565C0"/>
+            <rect id="zl4" x="2" y="276" width="130" height="26" rx="5" class="legende-zone" data-ans="Racine secondaire"/>
+            <text id="tl4" x="67" y="293" text-anchor="middle" class="legende-text drop-hint">⬇ déposer ici</text>
+            <!-- 6: Poils absorbants -->
+            <line x1="118" y1="345" x2="60" y2="345" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="56" cy="345" r="3" fill="#1565C0"/>
+            <rect id="zl5" x="2" y="331" width="130" height="26" rx="5" class="legende-zone" data-ans="Poils absorbants"/>
+            <text id="tl5" x="67" y="348" text-anchor="middle" class="legende-text drop-hint">⬇ déposer ici</text>
+          </svg>
+        </div>
+        <div class="legende-mots" id="mots-plante">
+          <span class="mot-drag" draggable="true" data-mot="Fleur">🌸 Fleur</span>
+          <span class="mot-drag" draggable="true" data-mot="Feuille">🍃 Feuille</span>
+          <span class="mot-drag" draggable="true" data-mot="Tige">🌿 Tige</span>
+          <span class="mot-drag" draggable="true" data-mot="Racine principale">↓ Racine principale</span>
+          <span class="mot-drag" draggable="true" data-mot="Racine secondaire">↙ Racine secondaire</span>
+          <span class="mot-drag" draggable="true" data-mot="Poils absorbants">〰 Poils absorbants</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q2</span> Complète les phrases sur les acquis du collège :</div>
+      <div class="trou-phrase">
+        L'absorption de l'eau s'effectue par les 
+        <span class="trou"><select id="t1" data-rep="racines"><option value="">…</option><option>feuilles</option><option>racines</option><option>tiges</option></select></span>
+        au niveau des 
+        <span class="trou"><select id="t2" data-rep="poils absorbants"><option value="">…</option><option>stomates</option><option>poils absorbants</option><option>vaisseaux du bois</option></select></span>.<br>
+        L'eau et les sels minéraux forment la 
+        <span class="trou"><select id="t3" data-rep="sève brute"><option value="">…</option><option>sève élaborée</option><option>sève brute</option><option>solution nutritive</option></select></span>
+        qui circule dans des 
+        <span class="trou"><select id="t4" data-rep="vaisseaux conducteurs"><option value="">…</option><option>stomates</option><option>cellules épidermiques</option><option>vaisseaux conducteurs</option></select></span>.<br>
+        La perte d'eau sous forme de vapeur par les feuilles s'appelle la 
+        <span class="trou"><select id="t5" data-rep="transpiration"><option value="">…</option><option>absorption</option><option>transpiration</option><option>conduction</option></select></span>.
+      </div>
+    </div>
+
+    <div class="bgrp">
+      <button class="btn btn-v btn-sm" onclick="corrigerSection('acquis')">✅ Vérifier</button>
+      <button class="btn btn-b btn-sm" onclick="goTab('a1')">Activité 1 →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ ACTIVITÉ 1 ═══════════ -->
+<div class="sec" id="sec-a1">
+<div class="card">
+  <div class="ch v"><div class="n">1</div>L'ABSORPTION D'EAU (pp. 10–12)</div>
+  <div class="cb">
+
+    <div class="info-box">💡 <b>Expérience de Rosène :</b> 5 tubes A→E avec différentes zones de la racine dans l'eau ou dans l'huile. Le tube A = témoin (toute la racine dans l'eau).</div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q3</span> Complète le tableau des résultats de l'expérience de Rosène :</div>
+      <table class="tab-trou">
+        <tr><th>Tube</th><th>Zone dans l'eau</th><th>Absorption ?</th><th>Conclusion</th></tr>
+        <tr>
+          <td><span class="fixed">A (témoin)</span></td>
+          <td><select data-rep="toute la racine"><option value="">…</option><option>zone pilifère seulement</option><option>toute la racine</option><option>zone subéreuse</option></select></td>
+          <td><select data-rep="oui (référence)"><option value="">…</option><option>oui (référence)</option><option>non</option><option>partielle</option></select></td>
+          <td><select data-rep="sert de référence"><option value="">…</option><option>absorption maximale</option><option>sert de référence</option><option>aucune absorption</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">B</span></td>
+          <td><select data-rep="coiffe + zone pilifère"><option value="">…</option><option>coiffe + zone pilifère</option><option>zone subéreuse</option><option>toute la racine</option></select></td>
+          <td><select data-rep="oui"><option value="">…</option><option>oui</option><option>non</option><option>très faible</option></select></td>
+          <td><select data-rep="la zone pilifère absorbe"><option value="">…</option><option>la zone pilifère absorbe</option><option>la coiffe absorbe</option><option>pas de conclusion</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">D</span></td>
+          <td><select data-rep="zone pilifère seule"><option value="">…</option><option>zone subéreuse seule</option><option>zone pilifère seule</option><option>coiffe seule</option></select></td>
+          <td><select data-rep="oui (maximum)"><option value="">…</option><option>non</option><option>oui (maximum)</option><option>faible</option></select></td>
+          <td><select data-rep="confirme que la zone pilifère absorbe"><option value="">…</option><option>confirme que la zone subéreuse absorbe</option><option>confirme que la zone pilifère absorbe</option><option>pas de conclusion</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">E</span></td>
+          <td><select data-rep="zone subéreuse seule"><option value="">…</option><option>zone subéreuse seule</option><option>zone pilifère seule</option><option>toute la racine</option></select></td>
+          <td><select data-rep="non (ou très faible)"><option value="">…</option><option>oui (maximum)</option><option>non (ou très faible)</option><option>oui, normale</option></select></td>
+          <td><select data-rep="la zone subéreuse n'absorbe pas"><option value="">…</option><option>la zone subéreuse absorbe bien</option><option>la zone subéreuse n'absorbe pas</option><option>la coiffe absorbe</option></select></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q4</span> Complète la phrase de conclusion de l'expérience de Rosène :</div>
+      <div class="trou-phrase">
+        L'absorption de l'eau se fait <b>exclusivement</b> au niveau de la 
+        <span class="trou"><select id="t6" data-rep="zone pilifère"><option value="">…</option><option>coiffe</option><option>zone pilifère</option><option>zone subéreuse</option></select></span>
+        grâce aux 
+        <span class="trou"><select id="t7" data-rep="poils absorbants"><option value="">…</option><option>stomates</option><option>poils absorbants</option><option>vaisseaux du bois</option></select></span>
+        qui représentent une 
+        <span class="trou"><select id="t8" data-rep="grande surface de contact"><option value="">…</option><option>petite surface de contact</option><option>grande surface de contact</option><option>surface imperméable</option></select></span>
+        avec le sol.
+      </div>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q5</span> Légender le schéma d'une jeune racine :</div>
+      <div class="legende-wrap">
+        <div class="legende-schema">
+          <svg viewBox="0 0 420 200" id="svg-racine">
+            <!-- Corps racine -->
+            <rect x="155" y="10" width="110" height="180" rx="55" fill="#F5F0EB" stroke="#795548" stroke-width="2"/>
+            <!-- Coiffe -->
+            <ellipse cx="210" cy="175" rx="55" ry="22" fill="#BCAAA4" stroke="#795548" stroke-width="1.5"/>
+            <text x="210" y="179" text-anchor="middle" font-size="10" fill="#4E342E" font-family="Nunito" font-weight="700">Coiffe</text>
+            <!-- Zone pilifère -->
+            <rect x="155" y="100" width="110" height="60" fill="#DCEDC8" stroke="#558B2F" stroke-width="1" stroke-dasharray="3,2"/>
+            <!-- Poils absorbants -->
+            <g stroke="#81C784" stroke-width="2" stroke-linecap="round">
+              <line x1="155" y1="110" x2="130" y2="105"/><line x1="155" y1="118" x2="128" y2="115"/>
+              <line x1="155" y1="126" x2="129" y2="123"/><line x1="155" y1="134" x2="130" y2="131"/>
+              <line x1="155" y1="142" x2="128" y2="139"/><line x1="155" y1="150" x2="130" y2="147"/>
+              <line x1="265" y1="110" x2="290" y2="105"/><line x1="265" y1="118" x2="292" y2="115"/>
+              <line x1="265" y1="126" x2="291" y2="123"/><line x1="265" y1="134" x2="290" y2="131"/>
+            </g>
+            <!-- Zone subéreuse -->
+            <rect x="155" y="10" width="110" height="90" fill="#FFF9C4" stroke="#F9A825" stroke-width="1" stroke-dasharray="3,2"/>
+            <!-- Flèches légende -->
+            <!-- Zone subéreuse -->
+            <line x1="155" y1="55" x2="80" y2="40" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="76" cy="39" r="3" fill="#1565C0"/>
+            <rect id="zr0" x="2" y="26" width="120" height="24" rx="5" class="legende-zone" data-ans="Zone subéreuse"/>
+            <text id="tr0" x="62" y="42" text-anchor="middle" class="legende-text drop-hint">⬇ déposer ici</text>
+            <!-- Zone pilifère -->
+            <line x1="155" y1="130" x2="80" y2="130" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="76" cy="130" r="3" fill="#1565C0"/>
+            <rect id="zr1" x="2" y="117" width="120" height="24" rx="5" class="legende-zone" data-ans="Zone pilifère"/>
+            <text id="tr1" x="62" y="133" text-anchor="middle" class="legende-text drop-hint">⬇ déposer ici</text>
+            <!-- Poils absorbants -->
+            <line x1="128" y1="115" x2="80" y2="170" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="76" cy="170" r="3" fill="#1565C0"/>
+            <rect id="zr2" x="2" y="157" width="120" height="24" rx="5" class="legende-zone" data-ans="Poils absorbants"/>
+            <text id="tr2" x="62" y="173" text-anchor="middle" class="legende-text drop-hint">⬇ déposer ici</text>
+            <!-- Cylindre central -->
+            <ellipse cx="210" cy="60" rx="20" ry="40" fill="#FFCCBC" stroke="#E64A19" stroke-width="1.5"/>
+            <line x1="265" y1="60" x2="340" y2="40" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <circle cx="344" cy="39" r="3" fill="#1565C0"/>
+            <rect id="zr3" x="298" y="26" width="120" height="24" rx="5" class="legende-zone" data-ans="Cylindre central"/>
+            <text id="tr3" x="358" y="42" text-anchor="middle" class="legende-text drop-hint">⬇ déposer ici</text>
+          </svg>
+        </div>
+        <div class="legende-mots" id="mots-racine">
+          <span class="mot-drag" draggable="true" data-mot="Zone subéreuse">Zone subéreuse</span>
+          <span class="mot-drag" draggable="true" data-mot="Zone pilifère">Zone pilifère</span>
+          <span class="mot-drag" draggable="true" data-mot="Poils absorbants">Poils absorbants</span>
+          <span class="mot-drag" draggable="true" data-mot="Cylindre central">Cylindre central</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bgrp">
+      <button class="btn btn-v btn-sm" onclick="corrigerSection('a1')">✅ Vérifier</button>
+      <button class="btn btn-b btn-sm" onclick="goTab('a2')">Activité 2 →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ ACTIVITÉ 2 ═══════════ -->
+<div class="sec" id="sec-a2">
+<div class="card">
+  <div class="ch b"><div class="n">2</div>LE MÉCANISME DE L'ABSORPTION — L'OSMOSE (pp. 13–16)</div>
+  <div class="cb">
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q6</span> Légender le schéma comparatif cellule turgescente / plasmolysée :</div>
+      <div class="legende-wrap">
+        <div class="legende-schema">
+          <svg viewBox="0 0 460 220">
+            <!-- Titre gauche / droite -->
+            <text x="115" y="18" text-anchor="middle" font-size="11" fill="#2E7D32" font-family="Nunito" font-weight="800">Cellule TURGESCENTE</text>
+            <text x="345" y="18" text-anchor="middle" font-size="11" fill="#C62828" font-family="Nunito" font-weight="800">Cellule PLASMOLYSÉE</text>
+            <!-- === Cellule turgescente === -->
+            <!-- Paroi -->
+            <rect x="30" y="30" width="170" height="160" rx="20" fill="none" stroke="#795548" stroke-width="3"/>
+            <!-- Membrane (collée à la paroi) -->
+            <rect x="36" y="36" width="158" height="148" rx="17" fill="none" stroke="#1565C0" stroke-width="2"/>
+            <!-- Grande vacuole -->
+            <ellipse cx="115" cy="110" rx="65" ry="58" fill="#B3E5FC" stroke="#0288D1" stroke-width="1.5"/>
+            <!-- Cytoplasme fin -->
+            <text x="60" y="68" font-size="9" fill="#1565C0" font-family="Nunito">Cytoplasme</text>
+            <!-- Noyau petit -->
+            <ellipse cx="65" cy="92" rx="12" ry="9" fill="#FF8A65" stroke="#E64A19" stroke-width="1.2"/>
+            <!-- Flèches eau entrant -->
+            <text x="12" y="112" font-size="14" fill="#0288D1">→</text>
+            <text x="196" y="112" font-size="14" fill="#0288D1">←</text>
+            <!-- Zones de légende turgescente -->
+            <line x1="115" y1="30" x2="115" y2="5" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <!-- déjà titré -->
+            <!-- === Cellule plasmolysée === -->
+            <!-- Paroi -->
+            <rect x="260" y="30" width="170" height="160" rx="20" fill="none" stroke="#795548" stroke-width="3"/>
+            <!-- Membrane décollée -->
+            <rect x="285" y="60" width="120" height="100" rx="14" fill="#FFCDD2" stroke="#C62828" stroke-width="2"/>
+            <!-- Vacuole rétrécie -->
+            <ellipse cx="345" cy="110" rx="35" ry="30" fill="#EF9A9A" stroke="#C62828" stroke-width="1.5"/>
+            <!-- Espace plasmolysé -->
+            <text x="268" y="50" font-size="8" fill="#C62828" font-family="Nunito" font-weight="700">Espace de</text>
+            <text x="268" y="60" font-size="8" fill="#C62828" font-family="Nunito" font-weight="700">plasmolyse</text>
+            <!-- Flèches eau sortant -->
+            <text x="240" y="112" font-size="14" fill="#C62828">←</text>
+            <text x="436" y="112" font-size="14" fill="#C62828">→</text>
+            <!-- Étiquettes fixes -->
+            <text x="115" y="115" text-anchor="middle" font-size="9" fill="#01579B" font-family="Nunito" font-weight="700">VACUOLE</text>
+            <text x="115" y="127" text-anchor="middle" font-size="9" fill="#01579B" font-family="Nunito">(grande)</text>
+            <text x="345" y="113" text-anchor="middle" font-size="9" fill="#B71C1C" font-family="Nunito" font-weight="700">VACUOLE</text>
+            <text x="345" y="125" text-anchor="middle" font-size="9" fill="#B71C1C" font-family="Nunito">(rétrécie)</text>
+            <!-- Zones à légender -->
+            <!-- Paroi cellulaire -->
+            <line x1="30" y1="75" x2="5" y2="90" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zc0" x="0" y="160" width="125" height="24" rx="5" class="legende-zone" data-ans="Paroi cellulaire"/>
+            <text id="tc0" x="62" y="176" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+            <!-- Membrane plasmique (turg) -->
+            <line x1="40" y1="140" x2="5" y2="140" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zc1" x="0" y="185" width="125" height="24" rx="5" class="legende-zone" data-ans="Membrane plasmique"/>
+            <text id="tc1" x="62" y="201" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+            <!-- Cytoplasme décollé (plas) -->
+            <line x1="285" y1="90" x2="335" y2="210" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zc2" x="280" y="195" width="130" height="24" rx="5" class="legende-zone" data-ans="Cytoplasme décollé"/>
+            <text id="tc2" x="345" y="211" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+          </svg>
+        </div>
+        <div class="legende-mots" id="mots-cell">
+          <span class="mot-drag" draggable="true" data-mot="Paroi cellulaire">Paroi cellulaire</span>
+          <span class="mot-drag" draggable="true" data-mot="Membrane plasmique">Membrane plasmique</span>
+          <span class="mot-drag" draggable="true" data-mot="Cytoplasme décollé">Cytoplasme décollé</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q7</span> Complète le tableau des observations sur l'oignon violet :</div>
+      <table class="tab-trou">
+        <tr><th>Solution NaCl</th><th>Milieu par rapport à la cellule</th><th>Mouvement de l'eau</th><th>État de la cellule</th></tr>
+        <tr>
+          <td><span class="fixed">2 g/l (dilué)</span></td>
+          <td><select data-rep="hypotonique"><option value="">…</option><option>hypertonique</option><option>hypotonique</option><option>isotonique</option></select></td>
+          <td><select data-rep="eau entre dans la cellule"><option value="">…</option><option>eau entre dans la cellule</option><option>eau sort de la cellule</option><option>pas de mouvement</option></select></td>
+          <td><select data-rep="turgescente"><option value="">…</option><option>plasmolysée</option><option>turgescente</option><option>normale</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">9 g/l (moyen)</span></td>
+          <td><select data-rep="isotonique"><option value="">…</option><option>hypertonique</option><option>hypotonique</option><option>isotonique</option></select></td>
+          <td><select data-rep="pas de mouvement net"><option value="">…</option><option>eau entre dans la cellule</option><option>eau sort de la cellule</option><option>pas de mouvement net</option></select></td>
+          <td><select data-rep="normale (état d'équilibre)"><option value="">…</option><option>plasmolysée</option><option>turgescente</option><option>normale (état d'équilibre)</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">20 g/l (concentré)</span></td>
+          <td><select data-rep="hypertonique"><option value="">…</option><option>hypertonique</option><option>hypotonique</option><option>isotonique</option></select></td>
+          <td><select data-rep="eau sort de la cellule"><option value="">…</option><option>eau entre dans la cellule</option><option>eau sort de la cellule</option><option>pas de mouvement</option></select></td>
+          <td><select data-rep="plasmolysée"><option value="">…</option><option>plasmolysée</option><option>turgescente</option><option>normale</option></select></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q8</span> Complète la définition de l'osmose :</div>
+      <div class="trou-phrase">
+        L'osmose est le passage d'eau à travers une membrane 
+        <span class="trou"><select id="t9" data-rep="semi-perméable"><option value="">…</option><option>imperméable</option><option>semi-perméable</option><option>poreuse large</option></select></span>
+        du milieu le 
+        <span class="trou"><select id="t10" data-rep="moins concentré (hypotonique)"><option value="">…</option><option>plus concentré (hypertonique)</option><option>moins concentré (hypotonique)</option><option>neutre (isotonique)</option></select></span>
+        vers le milieu le 
+        <span class="trou"><select id="t11" data-rep="plus concentré (hypertonique)"><option value="">…</option><option>moins concentré (hypotonique)</option><option>plus concentré (hypertonique)</option><option>neutre</option></select></span>
+        jusqu'à atteindre l'
+        <span class="trou"><select id="t12" data-rep="isotonie"><option value="">…</option><option>hypertonique</option><option>osmose</option><option>isotonie</option></select></span>.
+        Dans les conditions naturelles, la solution vacuolaire du poil absorbant est 
+        <span class="trou"><select id="t13" data-rep="hypertonique"><option value="">…</option><option>hypotonique</option><option>hypertonique</option><option>isotonique</option></select></span>
+        par rapport à la solution du sol → l'eau y pénètre par osmose.
+      </div>
+    </div>
+
+    <div class="bgrp">
+      <button class="btn btn-v btn-sm" onclick="corrigerSection('a2')">✅ Vérifier</button>
+      <button class="btn btn-b btn-sm" onclick="goTab('a3')">Activité 3 →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ ACTIVITÉ 3 ═══════════ -->
+<div class="sec" id="sec-a3">
+<div class="card">
+  <div class="ch v"><div class="n">3</div>LA TRANSPIRATION (pp. 17–20)</div>
+  <div class="cb">
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q9</span> Légender le schéma d'un stomate (épiderme inférieur de feuille) :</div>
+      <div class="legende-wrap">
+        <div class="legende-schema">
+          <svg viewBox="0 0 420 200">
+            <!-- Cellules épidermiques -->
+            <rect x="40" y="30" width="120" height="80" rx="10" fill="#F1F8E9" stroke="#AED581" stroke-width="1.5"/>
+            <rect x="260" y="30" width="120" height="80" rx="10" fill="#F1F8E9" stroke="#AED581" stroke-width="1.5"/>
+            <rect x="40" y="110" width="120" height="60" rx="10" fill="#F1F8E9" stroke="#AED581" stroke-width="1.5"/>
+            <rect x="260" y="110" width="120" height="60" rx="10" fill="#F1F8E9" stroke="#AED581" stroke-width="1.5"/>
+            <!-- Cellules stomatiques -->
+            <ellipse cx="160" cy="85" rx="30" ry="55" fill="#A5D6A7" stroke="#2E7D32" stroke-width="2"/>
+            <ellipse cx="260" cy="85" rx="30" ry="55" fill="#A5D6A7" stroke="#2E7D32" stroke-width="2"/>
+            <!-- Ostiole -->
+            <ellipse cx="210" cy="85" rx="18" ry="40" fill="#E3F2FD" stroke="#1565C0" stroke-width="2"/>
+            <!-- Noyaux dans cellules stomatiques -->
+            <ellipse cx="155" cy="70" rx="8" ry="6" fill="#FF8A65" stroke="#E64A19" stroke-width="1"/>
+            <ellipse cx="265" cy="70" rx="8" ry="6" fill="#FF8A65" stroke="#E64A19" stroke-width="1"/>
+            <!-- Chloroplastes -->
+            <ellipse cx="145" cy="95" rx="5" ry="3" fill="#66BB6A"/>
+            <ellipse cx="158" cy="100" rx="5" ry="3" fill="#66BB6A"/>
+            <ellipse cx="270" cy="95" rx="5" ry="3" fill="#66BB6A"/>
+            <!-- Flèches légende -->
+            <!-- Ostiole -->
+            <line x1="210" y1="50" x2="210" y2="10" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zs0" x="145" y="0" width="130" height="24" rx="5" class="legende-zone" data-ans="Ostiole"/>
+            <text id="ts0" x="210" y="16" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+            <!-- Cellule stomatique -->
+            <line x1="165" y1="55" x2="80" y2="10" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zs1" x="10" y="0" width="130" height="24" rx="5" class="legende-zone" data-ans="Cellule stomatique"/>
+            <text id="ts1" x="75" y="16" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+            <!-- Cellule épidermique -->
+            <line x1="320" y1="50" x2="360" y2="10" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zs2" x="286" y="0" width="130" height="24" rx="5" class="legende-zone" data-ans="Cellule épidermique"/>
+            <text id="ts2" x="351" y="16" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+            <!-- Chloroplaste -->
+            <line x1="148" y1="97" x2="80" y2="170" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zs3" x="10" y="165" width="120" height="24" rx="5" class="legende-zone" data-ans="Chloroplaste"/>
+            <text id="ts3" x="70" y="181" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+          </svg>
+        </div>
+        <div class="legende-mots" id="mots-stomate">
+          <span class="mot-drag" draggable="true" data-mot="Ostiole">Ostiole</span>
+          <span class="mot-drag" draggable="true" data-mot="Cellule stomatique">Cellule stomatique</span>
+          <span class="mot-drag" draggable="true" data-mot="Cellule épidermique">Cellule épidermique</span>
+          <span class="mot-drag" draggable="true" data-mot="Chloroplaste">Chloroplaste</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q10</span> Complète le tableau des facteurs influençant la transpiration :</div>
+      <table class="tab-trou">
+        <tr><th>Facteur</th><th>Quand ce facteur augmente</th><th>Effet sur la transpiration</th><th>Mécanisme</th></tr>
+        <tr>
+          <td><span class="fixed">💧 Humidité de l'air</span></td>
+          <td><select data-rep="humidité ↑"><option value="">…</option><option>humidité ↑</option><option>humidité ↓</option></select></td>
+          <td><select data-rep="transpiration ↓"><option value="">…</option><option>transpiration ↑</option><option>transpiration ↓</option><option>pas de changement</option></select></td>
+          <td><select data-rep="fermeture des stomates"><option value="">…</option><option>ouverture des stomates</option><option>fermeture des stomates</option><option>destruction des stomates</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">☀️ Lumière</span></td>
+          <td><select data-rep="lumière ↑"><option value="">…</option><option>lumière ↑</option><option>lumière ↓</option></select></td>
+          <td><select data-rep="transpiration ↑"><option value="">…</option><option>transpiration ↑</option><option>transpiration ↓</option><option>pas de changement</option></select></td>
+          <td><select data-rep="ouverture des ostioles"><option value="">…</option><option>fermeture des ostioles</option><option>ouverture des ostioles</option><option>destruction des ostioles</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">🌡 Température</span></td>
+          <td><select data-rep="température ↑"><option value="">…</option><option>température ↑</option><option>température ↓</option></select></td>
+          <td><select data-rep="transpiration ↑"><option value="">…</option><option>transpiration ↑</option><option>transpiration ↓</option><option>pas de changement</option></select></td>
+          <td><select data-rep="évaporation accrue"><option value="">…</option><option>évaporation réduite</option><option>évaporation accrue</option><option>aucun effet sur la vapeur</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">💨 Agitation de l'air</span></td>
+          <td><select data-rep="vent ↑"><option value="">…</option><option>vent ↑</option><option>vent ↓</option></select></td>
+          <td><select data-rep="transpiration ↑"><option value="">…</option><option>transpiration ↑</option><option>transpiration ↓</option><option>pas de changement</option></select></td>
+          <td><select data-rep="renouvellement de l'air humide"><option value="">…</option><option>accumulation d'air humide</option><option>renouvellement de l'air humide</option><option>fermeture des stomates</option></select></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q11</span> Complète les phrases sur la relation absorption / transpiration :</div>
+      <div class="trou-phrase">
+        Plus l'intensité de la transpiration est grande, plus la vitesse d'absorption est 
+        <span class="trou"><select id="t14" data-rep="importante"><option value="">…</option><option>faible</option><option>importante</option><option>nulle</option></select></span>.
+        On dit que la transpiration foliaire crée une 
+        <span class="trou"><select id="t15" data-rep="aspiration foliaire"><option value="">…</option><option>poussée radiculaire</option><option>aspiration foliaire</option><option>conduction latérale</option></select></span>.<br>
+        L'expérience de HALES montre que la sève est aussi 
+        <span class="trou"><select id="t16" data-rep="poussée par les racines"><option value="">…</option><option>aspirée par les racines</option><option>poussée par les racines</option><option>bloquée par les racines</option></select></span>
+        : c'est la 
+        <span class="trou"><select id="t17" data-rep="poussée radiculaire"><option value="">…</option><option>aspiration foliaire</option><option>poussée radiculaire</option><option>conduction verticale</option></select></span>.
+        Dans la plante, l'eau est donc à la fois 
+        <span class="trou"><select id="t18" data-rep="poussée et aspirée"><option value="">…</option><option>poussée uniquement</option><option>aspirée uniquement</option><option>poussée et aspirée</option></select></span>.
+      </div>
+    </div>
+
+    <div class="bgrp">
+      <button class="btn btn-v btn-sm" onclick="corrigerSection('a3')">✅ Vérifier</button>
+      <button class="btn btn-b btn-sm" onclick="goTab('a4')">Activité 4 →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ ACTIVITÉ 4 ═══════════ -->
+<div class="sec" id="sec-a4">
+<div class="card">
+  <div class="ch o"><div class="n">4</div>BESOINS EN SELS MINÉRAUX (pp. 21–24)</div>
+  <div class="cb">
+    <div class="qb">
+      <div class="qt"><span class="qn">Q12</span> Complète le tableau des symptômes de carence :</div>
+      <table class="tab-trou">
+        <tr><th>Élément absent</th><th>Symptôme observé</th><th>Masse sèche (%)</th><th>Type d'élément</th></tr>
+        <tr>
+          <td><span class="fixed">Azote (N)</span></td>
+          <td><select data-rep="chlorose générale (jaunissement)"><option value="">…</option><option>chlorose générale (jaunissement)</option><option>nécrose des feuilles</option><option>pas de symptôme</option></select></td>
+          <td><select data-rep="42%"><option value="">…</option><option>42%</option><option>72%</option><option>100%</option></select></td>
+          <td><select data-rep="macroélément"><option value="">…</option><option>oligoélément</option><option>macroélément</option><option>élément neutre</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">Phosphore (P)</span></td>
+          <td><select data-rep="jaunissement à l'extrémité des feuilles"><option value="">…</option><option>chlorose générale</option><option>jaunissement à l'extrémité des feuilles</option><option>nécrose totale</option></select></td>
+          <td><select data-rep="72%"><option value="">…</option><option>42%</option><option>72%</option><option>100%</option></select></td>
+          <td><select data-rep="macroélément"><option value="">…</option><option>oligoélément</option><option>macroélément</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">Potassium (K)</span></td>
+          <td><select data-rep="nécrose des feuilles"><option value="">…</option><option>chlorose générale</option><option>nécrose des feuilles</option><option>développement normal</option></select></td>
+          <td><select data-rep="27%"><option value="">…</option><option>72%</option><option>27%</option><option>100%</option></select></td>
+          <td><select data-rep="macroélément"><option value="">…</option><option>oligoélément</option><option>macroélément</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">Fer (Fe)</span></td>
+          <td><select data-rep="chlorose légère"><option value="">…</option><option>nécrose totale</option><option>chlorose légère</option><option>pas de symptôme</option></select></td>
+          <td><select data-rep="80%"><option value="">…</option><option>42%</option><option>80%</option><option>100%</option></select></td>
+          <td><select data-rep="oligoélément"><option value="">…</option><option>oligoélément</option><option>macroélément</option></select></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q13</span> Complète les définitions :</div>
+      <div class="trou-phrase">
+        Les <b>macroéléments</b> sont des éléments minéraux nécessaires en 
+        <span class="trou"><select id="t19" data-rep="grande quantité (g à mg)"><option value="">…</option><option>grande quantité (g à mg)</option><option>très faible quantité (μg)</option><option>quantité nulle</option></select></span>.
+        Exemples : N, P, K, S.<br>
+        Les <b>oligoéléments</b> sont nécessaires en 
+        <span class="trou"><select id="t20" data-rep="très faible quantité (μg)"><option value="">…</option><option>grande quantité (g à mg)</option><option>très faible quantité (μg)</option><option>quantité normale</option></select></span>.
+        Exemples : Fe, Zn, Mn.<br>
+        La courbe de croissance en fonction de la concentration d'un élément présente 3 phases :
+        <b>déficience</b> → 
+        <span class="trou"><select id="t21" data-rep="optimum"><option value="">…</option><option>carence</option><option>optimum</option><option>toxicité directe</option></select></span>
+        → 
+        <span class="trou"><select id="t22" data-rep="toxicité"><option value="">…</option><option>déficience</option><option>optimum</option><option>toxicité</option></select></span>.
+      </div>
+    </div>
+
+    <div class="bgrp">
+      <button class="btn btn-v btn-sm" onclick="corrigerSection('a4')">✅ Vérifier</button>
+      <button class="btn btn-b btn-sm" onclick="goTab('a5')">Activité 5 →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ ACTIVITÉ 5 ═══════════ -->
+<div class="sec" id="sec-a5">
+<div class="card">
+  <div class="ch b"><div class="n">5</div>LA CONDUCTION (pp. 25–27)</div>
+  <div class="cb">
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q14</span> Légender la coupe transversale de racine (conduction latérale) :</div>
+      <div class="legende-wrap">
+        <div class="legende-schema">
+          <svg viewBox="0 0 440 220">
+            <!-- Coupe transversale racine cercles concentriques -->
+            <!-- Épiderme + poils -->
+            <circle cx="200" cy="110" r="100" fill="#F9FBE7" stroke="#AED581" stroke-width="2.5"/>
+            <!-- Poils absorbants -->
+            <g stroke="#66BB6A" stroke-width="2.5" stroke-linecap="round">
+              <line x1="200" y1="10" x2="200" y2="-4"/>
+              <line x1="230" y1="14" x2="240" y2="2"/>
+              <line x1="257" y1="25" x2="270" y2="15"/>
+              <line x1="276" y1="43" x2="292" y2="35"/>
+              <line x1="143" y1="14" x2="133" y2="2"/>
+              <line x1="116" y1="28" x2="103" y2="18"/>
+              <line x1="100" y1="48" x2="86" y2="40"/>
+            </g>
+            <!-- Cortex -->
+            <circle cx="200" cy="110" r="80" fill="#DCEDC8" stroke="#8BC34A" stroke-width="1.5"/>
+            <!-- Endoderme -->
+            <circle cx="200" cy="110" r="55" fill="#FFF9C4" stroke="#F9A825" stroke-width="2"/>
+            <!-- Cylindre central -->
+            <circle cx="200" cy="110" r="38" fill="#FFCCBC" stroke="#E64A19" stroke-width="2"/>
+            <!-- Vaisseaux du bois (xylème) - en étoile -->
+            <g fill="#8D6E63" stroke="#5D4037" stroke-width="0.5">
+              <ellipse cx="200" cy="88" rx="8" ry="7"/>
+              <ellipse cx="200" cy="132" rx="8" ry="7"/>
+              <ellipse cx="179" cy="99" rx="7" ry="8"/>
+              <ellipse cx="221" cy="99" rx="7" ry="8"/>
+              <ellipse cx="179" cy="121" rx="7" ry="8"/>
+              <ellipse cx="221" cy="121" rx="7" ry="8"/>
+            </g>
+            <!-- Noyau central -->
+            <circle cx="200" cy="110" r="10" fill="#FFAB91" stroke="#E64A19" stroke-width="1.5"/>
+            <!-- Flèche mouvement eau -->
+            <text x="320" y="80" font-size="12" fill="#0288D1" font-family="Nunito" font-weight="800">← eau</text>
+            <text x="318" y="96" font-size="10" fill="#0288D1" font-family="Nunito">osmose</text>
+            <!-- Zones à légender -->
+            <!-- Épiderme + poils -->
+            <line x1="200" y1="10" x2="200" y2="-5" stroke="#90CAF9" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="290" y1="65" x2="350" y2="30" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zx0" x="296" y="10" width="130" height="24" rx="5" class="legende-zone" data-ans="Épiderme + poils absorbants"/>
+            <text id="tx0" x="361" y="26" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+            <!-- Cortex -->
+            <line x1="290" y1="100" x2="350" y2="100" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zx1" x="296" y="87" width="130" height="24" rx="5" class="legende-zone" data-ans="Cortex (parenchyme)"/>
+            <text id="tx1" x="361" y="103" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+            <!-- Cylindre central -->
+            <line x1="238" y1="110" x2="350" y2="140" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zx2" x="296" y="128" width="130" height="24" rx="5" class="legende-zone" data-ans="Cylindre central (xylème)"/>
+            <text id="tx2" x="361" y="144" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+            <!-- Vaisseaux du bois -->
+            <line x1="200" y1="88" x2="130" y2="180" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect id="zx3" x="10" y="177" width="130" height="24" rx="5" class="legende-zone" data-ans="Vaisseaux du bois"/>
+            <text id="tx3" x="75" y="193" text-anchor="middle" class="legende-text drop-hint">⬇ déposer</text>
+          </svg>
+        </div>
+        <div class="legende-mots" id="mots-xyl">
+          <span class="mot-drag" draggable="true" data-mot="Épiderme + poils absorbants">Épiderme + poils absorbants</span>
+          <span class="mot-drag" draggable="true" data-mot="Cortex (parenchyme)">Cortex (parenchyme)</span>
+          <span class="mot-drag" draggable="true" data-mot="Cylindre central (xylème)">Cylindre central (xylème)</span>
+          <span class="mot-drag" draggable="true" data-mot="Vaisseaux du bois">Vaisseaux du bois</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q15</span> Complète les phrases sur la conduction :</div>
+      <div class="trou-phrase">
+        L'expérience à l'éosine montre que l'eau circule dans des 
+        <span class="trou"><select id="t23" data-rep="vaisseaux du bois (xylème)"><option value="">…</option><option>stomates</option><option>vaisseaux du bois (xylème)</option><option>cellules épidermiques</option></select></span>.
+        Ces vaisseaux sont formés de cellules 
+        <span class="trou"><select id="t24" data-rep="mortes aux parois lignifiées"><option value="">…</option><option>vivantes riches en cytoplasme</option><option>mortes aux parois lignifiées</option><option>vivantes sans noyau</option></select></span>.
+        La sève brute est un mélange d' 
+        <span class="trou"><select id="t25" data-rep="eau et sels minéraux"><option value="">…</option><option>eau et matière organique</option><option>eau et sels minéraux</option><option>glucose et eau</option></select></span>
+        qui circule des 
+        <span class="trou"><select id="t26" data-rep="racines vers les feuilles"><option value="">…</option><option>feuilles vers les racines</option><option>racines vers les feuilles</option><option>tiges vers les racines</option></select></span>.
+      </div>
+    </div>
+
+    <div class="bgrp">
+      <button class="btn btn-v btn-sm" onclick="corrigerSection('a5')">✅ Vérifier</button>
+      <button class="btn btn-b btn-sm" onclick="goTab('a6')">Activité 6 →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ ACTIVITÉ 6 ═══════════ -->
+<div class="sec" id="sec-a6">
+<div class="card">
+  <div class="ch v"><div class="n">6</div>AMÉLIORATION DE LA PRODUCTION VÉGÉTALE (pp. 28–32)</div>
+  <div class="cb">
+    <div class="qb">
+      <div class="qt"><span class="qn">Q16</span> Complète le tableau comparatif sur l'irrigation :</div>
+      <table class="tab-trou">
+        <tr><th>Situation</th><th>Effet sur les racines</th><th>Effet sur le rendement</th><th>Solution</th></tr>
+        <tr>
+          <td><span class="fixed">🌊 Excès d'eau</span></td>
+          <td><select data-rep="asphyxie des racines"><option value="">…</option><option>développement optimal</option><option>asphyxie des racines</option><option>absorption maximale</option></select></td>
+          <td><select data-rep="rendement diminue"><option value="">…</option><option>rendement maximal</option><option>rendement diminue</option><option>pas d'effet</option></select></td>
+          <td><select data-rep="réduire les apports d'eau"><option value="">…</option><option>augmenter l'irrigation</option><option>réduire les apports d'eau</option><option>ajouter des engrais</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">🏜 Déficit en eau</span></td>
+          <td><select data-rep="absorption réduite, flétrissement"><option value="">…</option><option>croissance racinaire maximale</option><option>absorption réduite, flétrissement</option><option>aucun effet sur les racines</option></select></td>
+          <td><select data-rep="rendement réduit voire nul"><option value="">…</option><option>rendement maximal</option><option>rendement réduit voire nul</option><option>pas d'effet visible</option></select></td>
+          <td><select data-rep="irrigation complémentaire"><option value="">…</option><option>réduire l'irrigation</option><option>irrigation complémentaire</option><option>ajouter des pesticides</option></select></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q17</span> Complète le tableau comparatif des types de fertilisation :</div>
+      <table class="tab-trou">
+        <tr><th>Critère</th><th>Fertilisation minérale</th><th>Fertilisation organique</th></tr>
+        <tr>
+          <td><span class="fixed">Nature</span></td>
+          <td><select data-rep="engrais chimiques (N, P, K)"><option value="">…</option><option>engrais chimiques (N, P, K)</option><option>fumier et compost</option><option>solution de KNOP</option></select></td>
+          <td><select data-rep="matière organique (fumier, compost)"><option value="">…</option><option>engrais chimiques synthétiques</option><option>matière organique (fumier, compost)</option><option>pesticides</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">Mode d'action</span></td>
+          <td><select data-rep="apport direct d'éléments minéraux assimilables"><option value="">…</option><option>décomposition lente par micro-organismes</option><option>apport direct d'éléments minéraux assimilables</option></select></td>
+          <td><select data-rep="décomposée progressivement par micro-organismes"><option value="">…</option><option>action chimique immédiate</option><option>décomposée progressivement par micro-organismes</option></select></td>
+        </tr>
+        <tr>
+          <td><span class="fixed">Exemple</span></td>
+          <td><select data-rep="nitrate d'ammonium, superphosphate, NPK"><option value="">…</option><option>fumier de vache, compost</option><option>nitrate d'ammonium, superphosphate, NPK</option><option>trèfle enfoui</option></select></td>
+          <td><select data-rep="fumier, compost, engrais vert (trèfle)"><option value="">…</option><option>nitrate d'ammonium</option><option>fumier, compost, engrais vert (trèfle)</option><option>pesticide systémique</option></select></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="qb">
+      <div class="qt"><span class="qn">Q18</span> Complète les phrases sur les autres moyens d'amélioration :</div>
+      <div class="trou-phrase">
+        Une 
+        <span class="trou"><select id="t27" data-rep="serre"><option value="">…</option><option>serre</option><option>pépinière</option><option>rizière</option></select></span>
+        permet de contrôler les conditions 
+        <span class="trou"><select id="t28" data-rep="climatiques, hydriques et thermiques"><option value="">…</option><option>génétiques et biologiques</option><option>climatiques, hydriques et thermiques</option><option>chimiques uniquement</option></select></span>
+        de culture. La culture 
+        <span class="trou"><select id="t29" data-rep="hors-sol (hydroponique)"><option value="">…</option><option>biologique intensive</option><option>hors-sol (hydroponique)</option><option>en rotation</option></select></span>
+        utilise une 
+        <span class="trou"><select id="t30" data-rep="solution nutritive artificielle"><option value="">…</option><option>solution de pesticides</option><option>solution nutritive artificielle</option><option>boue organique</option></select></span>
+        à la place du sol. Les semences sont sélectionnées pour leur 
+        <span class="trou"><select id="t31" data-rep="productivité et résistance aux maladies"><option value="">…</option><option>taille et couleur</option><option>productivité et résistance aux maladies</option><option>teneur en sucre</option></select></span>.
+      </div>
+    </div>
+
+    <div class="bgrp">
+      <button class="btn btn-v btn-sm" onclick="corrigerSection('a6')">✅ Vérifier</button>
+      <button class="btn btn-b btn-sm" onclick="goTab('qcm')">QCM →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ QCM ═══════════ -->
+<div class="sec" id="sec-qcm">
+<div class="card">
+  <div class="ch b"><div class="n">🎯</div>QCM FORMAT CAPES — 10 QUESTIONS</div>
+  <div class="cb">
+    <div class="warn-qcm">⚠ Chaque question peut avoir 1, 2 ou 3 réponses correctes — coche TOUTES les bonnes réponses</div>
+    <div id="qcm-wrap"></div>
+    <div class="bgrp" style="margin-top:18px">
+      <button class="btn btn-v" onclick="corrigerQCM()">✅ Corriger</button>
+      <button class="btn btn-o" onclick="resetQCM()">🔄 Réinitialiser</button>
+    </div>
+    <div id="qcm-score" style="display:none;margin-top:14px"></div>
+  </div>
+</div>
+</div>
+
+<script>
+// ── Timer
+let t0=Date.now();
+setInterval(()=>{let s=Math.floor((Date.now()-t0)/1e3),m=Math.floor(s/60);s%=60;
+  document.getElementById('tbadge').textContent=`⏱ ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;},1000);
+
+// ── Tabs
+const tabIds=['acquis','a1','a2','a3','a4','a5','a6','qcm'];
+function goTab(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.tab')[tabIds.indexOf(id)]?.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Drag & Drop légendes
+let dragMot=null;
+document.addEventListener('dragstart',e=>{
+  if(e.target.classList.contains('mot-drag')&&!e.target.classList.contains('used')){
+    dragMot=e.target.dataset.mot; e.dataTransfer.setData('text',dragMot);
+  }
+});
+
+// SVG drop zones
+document.querySelectorAll('[id^="z"]').forEach(rect=>{
+  if(!rect.tagName.match(/rect/i)) return;
+  rect.addEventListener('dragover',e=>e.preventDefault());
+  rect.addEventListener('drop',e=>{
+    e.preventDefault();
+    const mot=e.dataTransfer.getData('text')||dragMot;
+    if(!mot) return;
+    const idx=rect.id.replace(/[a-z]+/gi,'').replace(/\D/g,'');
+    const prefix=rect.id.match(/^z([a-z]+)/)?.[1]||'';
+    const txtId='t'+prefix+rect.id.replace(/z[a-z]*/,'');
+    const txtEl=document.getElementById(txtId);
+    const ans=rect.dataset.ans;
+    if(txtEl){
+      txtEl.textContent=mot;
+      txtEl.classList.remove('drop-hint');
+      if(mot===ans){
+        txtEl.classList.add('ok-text');
+        rect.classList.add('ok-zone');
+        rect.classList.remove('ko-zone');
+        // Mark word as used
+        document.querySelectorAll(`.mot-drag[data-mot="${mot}"]`).forEach(m=>m.classList.add('used'));
+      } else {
+        txtEl.classList.add('ko-text');
+        txtEl.classList.remove('ok-text');
+        rect.classList.add('ko-zone');
+        rect.classList.remove('ok-zone');
+      }
+    }
+  });
+});
+
+// Touch drag support
+let touchMot=null, touchEl=null;
+document.addEventListener('touchstart',e=>{
+  const t=e.target.closest('.mot-drag');
+  if(t&&!t.classList.contains('used')){touchMot=t.dataset.mot;touchEl=t;t.style.opacity='.6';}
+},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(!touchMot)return;
+  const touch=e.changedTouches[0];
+  const el=document.elementFromPoint(touch.clientX,touch.clientY);
+  const rect=el?.closest('[data-ans]');
+  if(rect){
+    const txtId=rect.id.replace('z','t');
+    const txtEl=document.getElementById(txtId);
+    if(txtEl){
+      txtEl.textContent=touchMot;
+      txtEl.classList.remove('drop-hint');
+      const ans=rect.dataset.ans;
+      if(touchMot===ans){
+        txtEl.classList.add('ok-text'); rect.classList.add('ok-zone');
+        document.querySelectorAll(`.mot-drag[data-mot="${touchMot}"]`).forEach(m=>m.classList.add('used'));
+      } else {
+        txtEl.classList.add('ko-text'); rect.classList.add('ko-zone');
+      }
+    }
+  }
+  if(touchEl)touchEl.style.opacity='1';
+  touchMot=null;touchEl=null;
+});
+
+// ── Correction sections (trous + tableaux)
+function corrigerSection(sec){
+  let ok=0,tot=0;
+  const container=document.getElementById('sec-'+sec);
+  container.querySelectorAll('select[data-rep]').forEach(sel=>{
+    tot++;
+    const rep=sel.dataset.rep;
+    sel.classList.remove('ok','ko');
+    if(sel.value===rep){sel.classList.add('ok');ok++;}
+    else if(sel.value) sel.classList.add('ko');
+  });
+  updateProgress();
+}
+
+// ── Progression
+function updateProgress(){
+  const all=document.querySelectorAll('select[data-rep]');
+  let filled=0;
+  all.forEach(s=>{if(s.value)filled++;});
+  const pct=Math.round(filled/all.length*100);
+  document.getElementById('pfill').style.width=pct+'%';
+  document.getElementById('ptxt').textContent=`${filled} / ${all.length} réponses`;
+}
+document.addEventListener('change',updateProgress);
+
+// ── QCM
+const qdata=[
+  {q:"L'absorption d'eau chez la plante s'effectue principalement au niveau :",
+   o:["De la zone subéreuse","Des poils absorbants de la zone pilifère","Des feuilles par les stomates","Du cylindre central"],r:["B"]},
+  {q:"L'osmose est :",
+   o:["Un passage actif nécessitant de l'énergie","Un passage d'eau du milieu hypotonique vers l'hypertonique","Un passage du milieu hypertonique vers l'hypotonique","Une diffusion d'ions à travers la membrane"],r:["B"]},
+  {q:"Une cellule végétale plasmolysée est :",
+   o:["Une cellule gorgée d'eau (vacuole grande)","Dont le cytoplasme s'est décollé de la paroi","Placée dans un milieu hypotonique","Placée dans un milieu hypertonique"],r:["B","D"]},
+  {q:"La transpiration foliaire est favorisée par :",
+   o:["Une humidité relative élevée de l'air","La lumière","Une température élevée (25-30°C)","L'obscurité totale"],r:["B","C"]},
+  {q:"Un stomate est composé de :",
+   o:["Une seule cellule stomatique","Deux cellules stomatiques délimitant un ostiole","Des cellules riches en chlorophylle","Un ostiole dont le diamètre varie selon les conditions"],r:["B","D"]},
+  {q:"Parmi les éléments suivants, lesquels sont des macroéléments ?",
+   o:["Azote (N)","Fer (Fe) en traces","Phosphore (P)","Potassium (K)"],r:["A","C","D"]},
+  {q:"Les vaisseaux du bois (xylème) sont caractérisés par :",
+   o:["Des cellules vivantes riches en cytoplasme","Des cellules mortes aux parois lignifiées","La conduction de la sève élaborée","La conduction de la sève brute (eau + sels minéraux)"],r:["B","D"]},
+  {q:"La montée de la sève brute dans la plante est assurée par :",
+   o:["La poussée radiculaire uniquement","L'aspiration foliaire uniquement","La poussée radiculaire ET l'aspiration foliaire","La pression atmosphérique"],r:["C"]},
+  {q:"La fertilisation organique consiste à :",
+   o:["Épandre des engrais chimiques riches en N, P, K","Apporter du fumier ou du compost au sol","Enfouir des légumineuses (engrais vert) dans le sol","Irriguer avec une solution de sels minéraux"],r:["B","C"]},
+  {q:"Une carence en azote chez la plante provoque :",
+   o:["Un développement parfaitement normal","Une chlorose (jaunissement) des feuilles","Une nécrose des parties terminales","Une réduction de la masse sèche à 42% du témoin"],r:["B","D"]},
+];
+const ltrs=['A','B','C','D'];
+const sel={};
+const qw=document.getElementById('qcm-wrap');
+qdata.forEach((q,qi)=>{
+  sel[qi]=new Set();
+  qw.innerHTML+=`<div class="qb" id="qq${qi}">
+    <div class="qcm-enonce"><b>Q${qi+1}.</b> ${q.q}</div>
+    <div class="qcm-opts" id="op${qi}">
+      ${q.o.map((o,oi)=>`<div class="qcm-opt" id="o${qi}-${oi}" onclick="togOpt(${qi},${oi})">
+        <span class="lt">${ltrs[oi]}</span><span>${o}</span></div>`).join('')}
+    </div>
+    <div class="fb" id="fb${qi}"></div>
+  </div>`;
+});
+function togOpt(qi,oi){
+  if(document.getElementById('qcm-score').style.display!=='none')return;
+  const el=document.getElementById(`o${qi}-${oi}`);
+  if(sel[qi].has(oi)){sel[qi].delete(oi);el.classList.remove('sel');}
+  else{sel[qi].add(oi);el.classList.add('sel');}
+}
+function corrigerQCM(){
+  let score=0;
+  qdata.forEach((q,qi)=>{
+    const correct=new Set(q.r.map(r=>ltrs.indexOf(r)));
+    const user=sel[qi];
+    const isOk=[...correct].every(c=>user.has(c))&&user.size===correct.size;
+    if(isOk)score++;
+    q.o.forEach((_,oi)=>{
+      const el=document.getElementById(`o${qi}-${oi}`);
+      el.classList.remove('sel');
+      if(correct.has(oi))el.classList.add('ok');
+      else if(user.has(oi))el.classList.add('ko');
+    });
+    const fb=document.getElementById(`fb${qi}`);
+    fb.className=`fb show ${isOk?'ok':'ko'}`;
+    fb.innerHTML=isOk?`✅ Correct ! Réponse(s) : <b>${q.r.join(', ')}</b>`
+      :`❌ Incorrect. Bonne(s) réponse(s) : <b>${q.r.join(', ')}</b>`;
+  });
+  const pct=Math.round(score/qdata.length*100);
+  const sd=document.getElementById('qcm-score');
+  sd.style.display='block';
+  sd.innerHTML=`<div class="score-card">
+    <div class="score-big">${score}/${qdata.length}</div>
+    <div style="font-size:12px;opacity:.8;margin-top:4px">Score QCM</div>
+    <div class="score-details">
+      <div class="sd"><div class="val">${pct}%</div><div class="lab">Pourcentage</div></div>
+      <div class="sd"><div class="val">${score}</div><div class="lab">Correctes</div></div>
+      <div class="sd"><div class="val">${qdata.length-score}</div><div class="lab">À revoir</div></div>
+    </div>
+    <div style="margin-top:12px;font-size:13px;opacity:.9">
+      ${pct>=80?'🎉 Excellent !':pct>=60?'👍 Bien, continue !':'📚 Revois le cours !'}
+    </div>
+  </div>`;
+  document.getElementById('scoreAff').value=`${score} / ${qdata.length}`;
+}
+function resetQCM(){
+  Object.keys(sel).forEach(qi=>{
+    sel[qi]=new Set();
+    qdata[qi].o.forEach((_,oi)=>{document.getElementById(`o${qi}-${oi}`).className='qcm-opt';});
+    document.getElementById(`fb${qi}`).className='fb';
+  });
+  document.getElementById('qcm-score').style.display='none';
+  document.getElementById('scoreAff').value='';
+}
+
+// Date auto
+document.getElementById('ddate').valueAsDate=new Date();
+</script>
+</body>
+</html>
